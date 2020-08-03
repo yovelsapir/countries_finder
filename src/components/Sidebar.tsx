@@ -12,24 +12,25 @@ interface Country {
 
 type SidebarProps = {
    onSearchCountryChange: (value: string) => void;
+   onUndo: () => void;
+   canUndo: boolean;
    searchValue: string;
    title?: string;
    countries: {
       [name: string]: Country;
    };
-   onUndo: () => void;
-   canUndo: boolean;
 };
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
-   searchValue = '',
    onSearchCountryChange,
-   title = 'Country List',
-   countries = {},
    onUndo,
    canUndo,
+   searchValue = '',
+   title = 'Country List',
+   countries = {},
 }) => {
    const onHandleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+      console.log(onSearchCountryChange(e.target.value));
       onSearchCountryChange(e.target.value);
    };
 
@@ -45,7 +46,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   name="search"
                   id="search"
                   onChange={onHandleSearch}
-                  value={searchValue}
+                  // value={searchValue}
                />
                {!searchValue && <label htmlFor="search">Search</label>}
             </div>
@@ -80,11 +81,9 @@ const mapStateToProps = ({
    };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-   return {
-      onUndo: () => dispatch(UndoActionCreators.undo()),
-      onSearchCountryChange: searchCountryChangeAction,
-   };
+const mapDispatchToProps = {
+   onUndo: UndoActionCreators.undo,
+   onSearchCountryChange: searchCountryChangeAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

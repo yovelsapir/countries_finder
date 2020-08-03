@@ -2,7 +2,7 @@ import { call, put, all, takeEvery, take } from 'redux-saga/effects';
 import { countriesTypes } from '../actions/types';
 import Api from '../Api/Api';
 
-export function* handleChangeCurrentCountry(action: any) {
+function* handleChangeCurrentCountry(action: any) {
    try {
       yield put({
          type: countriesTypes.SET_CURRENT_COUNTRY_SUCCESS,
@@ -24,7 +24,7 @@ function* watchSetCountryClicked() {
    }
 }
 
-export function* handleSearchInputChange(action: any) {
+function* handleSearchInputChange(action: any) {
    try {
       yield put({
          type: countriesTypes.SEARCH_COUNTRY_SUCCESS,
