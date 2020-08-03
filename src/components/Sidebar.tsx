@@ -74,7 +74,6 @@ const mapStateToProps = ({
       past,
    },
 }: any) => {
-   console.log(past);
    return {
       searchValue,
       canUndo: past.length > 5,

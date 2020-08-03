@@ -1,7 +1,6 @@
-import { call, put, all, takeEvery } from 'redux-saga/effects';
+import { call, put, all, takeEvery, take } from 'redux-saga/effects';
 import { countriesTypes } from '../actions/types';
 import Api from '../Api/Api';
-import { take } from 'lodash';
 
 export function* handleChangeCurrentCountry(action: any) {
    try {
