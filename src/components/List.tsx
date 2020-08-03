@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { searchCountry as searchCountryAction } from '../actions';
+import { setCurrentCountryChange as setCurrentCountryChangeAction } from '../actions';
 
 interface AlphabeticList {
    [title: string]: string[];
@@ -11,7 +11,7 @@ type ListProps = {
    countries: {
       [name: string]: Country;
    };
-   searchCountry: (value: string) => void;
+   setCurrentCountryChange: (value: string) => void;
 };
 
 interface Country {
@@ -19,9 +19,9 @@ interface Country {
    flag: string;
 }
 
-const List = ({ countries, search, searchCountry }: ListProps) => {
+const List = ({ countries, search, setCurrentCountryChange }: ListProps) => {
    const onCountryClicked = (countryName: string) => {
-      searchCountry(countryName);
+      setCurrentCountryChange(countryName);
    };
 
    const getAlphabeticList = () => {
@@ -83,5 +83,5 @@ const List = ({ countries, search, searchCountry }: ListProps) => {
 };
 
 export default connect(null, {
-   searchCountry: searchCountryAction,
+   setCurrentCountryChange: setCurrentCountryChangeAction,
 })(List);

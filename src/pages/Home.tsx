@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, FunctionComponent } from 'react';
+import React, { useEffect, FunctionComponent } from 'react';
 import BaseLayout from '../components/BaseLayout';
 import { connect } from 'react-redux';
-import { fetchCountries as fetchCountriesAction } from './../actions/index';
+// import { fetchCountries as fetchCountriesAction } from './../actions/index';
 import Sidebar from '../components/Sidebar';
 import CountryDetails from '../components/CountryDetails';
+import { fetchCountriesAction } from '../actions';
 
 interface Country {
    name: string;
@@ -22,33 +23,28 @@ type HomeProps = {
 
 const Home: FunctionComponent<HomeProps> = ({
    countries,
-   currentCountry,
+   currentCountry = '',
    fetchCountries,
 }: HomeProps) => {
-   const [search, setSearch] = useState('');
-
    useEffect(() => {
       fetchCountries();
    }, []);
 
-   const onSearchChange = (value: string) => {
-      setSearch(value);
-   };
-
    return (
       <BaseLayout>
-         <Sidebar
-            title="Country List"
-            countries={countries}
-            onSearchChange={onSearchChange}
-            search={search}
-         />
-         <CountryDetails country={countries[currentCountry]} />
+         <Sidebar title="Country List" countries={countries} />
+         {currentCountry && (
+            <CountryDetails country={countries[currentCountry]} />
+         )}
       </BaseLayout>
    );
 };
 
-const mapStateToProps = ({ countries: { data, country } }: any) => {
+const mapStateToProps = ({
+   countries: {
+      present: { data, country },
+   },
+}: any) => {
    return {
       countries: data,
       currentCountry: country,

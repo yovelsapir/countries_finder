@@ -1,6 +1,9 @@
 import React, { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import './Sidebar.scss';
 import List from './List';
+import { connect } from 'react-redux';
+import { searchCountryChangeAction } from '../actions';
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
 
 interface Country {
    name: string;
@@ -8,22 +11,26 @@ interface Country {
 }
 
 type SidebarProps = {
-   onSearchChange: (value: string) => void;
-   search: string;
+   onSearchCountryChange: (value: string) => void;
+   searchValue: string;
    title?: string;
    countries: {
       [name: string]: Country;
    };
+   onUndo: () => void;
+   canUndo: boolean;
 };
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
-   search = '',
-   onSearchChange,
+   searchValue = '',
+   onSearchCountryChange,
    title = 'Country List',
    countries = {},
+   onUndo,
+   canUndo,
 }) => {
    const onHandleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-      onSearchChange(e.target.value);
+      onSearchCountryChange(e.target.value);
    };
 
    const searchBox = () => {
@@ -38,9 +45,9 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   name="search"
                   id="search"
                   onChange={onHandleSearch}
-                  value={search}
+                  value={searchValue}
                />
-               {!search && <label htmlFor="search">Search</label>}
+               {!searchValue && <label htmlFor="search">Search</label>}
             </div>
          </form>
       );
@@ -48,14 +55,37 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
 
    return (
       <div className="sidebar">
-         <div className="sidebar__header">{title}</div>
+         <div className="sidebar__header">
+            <span>{title}</span>
+            <i onClick={() => canUndo && onUndo()}>&#8634;</i>
+         </div>
          {searchBox()}
          {/* <hr className="sidebar__hr" /> */}
          <ul className="sidebar__list">
-            <List countries={countries} search={search} />
+            <List countries={countries} search={searchValue} />
          </ul>
       </div>
    );
 };
 
-export default Sidebar;
+const mapStateToProps = ({
+   countries: {
+      present: { searchValue },
+      past,
+   },
+}: any) => {
+   console.log(past);
+   return {
+      searchValue,
+      canUndo: past.length > 5,
+   };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+   return {
+      onUndo: () => dispatch(UndoActionCreators.undo()),
+      onSearchCountryChange: searchCountryChangeAction,
+   };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
