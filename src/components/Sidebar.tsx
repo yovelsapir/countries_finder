@@ -30,8 +30,12 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
    countries = {},
 }) => {
    const onHandleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-      console.log(onSearchCountryChange(e.target.value));
       onSearchCountryChange(e.target.value);
+   };
+
+   const doubleUndo = () => {
+      onUndo();
+      onUndo();
    };
 
    const searchBox = () => {
@@ -58,7 +62,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
       <div className="sidebar">
          <div className="sidebar__header">
             <span>{title}</span>
-            <i onClick={() => canUndo && onUndo()}>&#8634;</i>
+            <i onClick={() => canUndo && doubleUndo()}>&#8634;</i>
          </div>
          {searchBox()}
          {/* <hr className="sidebar__hr" /> */}
