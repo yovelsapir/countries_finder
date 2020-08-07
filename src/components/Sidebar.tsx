@@ -50,7 +50,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                   name="search"
                   id="search"
                   onChange={onHandleSearch}
-                  // value={searchValue}
+                  value={searchValue}
                />
                {!searchValue && <label htmlFor="search">Search</label>}
             </div>

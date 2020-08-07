@@ -1,4 +1,4 @@
-enum _countriesTypes {
+enum countriesTypes {
    FETCH_COUNTRIES = 'FETCH_COUNTRIES',
    FETCH_COUNTRIES_ERROR = 'FETCH_COUNTRIES_ERROR',
    SEARCH_COUNTRY_CHANGE = 'SEARCH_COUNTRY_CHANGE',
@@ -9,6 +9,4 @@ enum _countriesTypes {
    SET_CURRENT_COUNTRY_FAILED = 'SET_CURRENT_COUNTRY_FAILED',
 }
 
-export const countriesTypes = _countriesTypes;
-
-export default {};
+export { countriesTypes };

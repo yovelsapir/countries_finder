@@ -19,35 +19,42 @@ type HomeProps = {
    currentCountry: string;
    countries: { [name: string]: Country };
    fetchCountries: () => void;
+   done: boolean;
 };
 
 const Home: FunctionComponent<HomeProps> = ({
    countries,
    currentCountry = '',
    fetchCountries,
+   done = true,
 }: HomeProps) => {
    useEffect(() => {
       fetchCountries();
    }, []);
 
-   return (
-      <BaseLayout>
-         <Sidebar title="Country List" countries={countries} />
-         {currentCountry && (
-            <CountryDetails country={countries[currentCountry]} />
-         )}
-      </BaseLayout>
-   );
+   const renderPage = () => {
+      if (!done) return <div>Loading....</div>;
+      return (
+         <React.Fragment>
+            <Sidebar title="Country List" countries={countries} />
+            {currentCountry && (
+               <CountryDetails country={countries[currentCountry]} />
+            )}
+         </React.Fragment>
+      );
+   };
+   return <BaseLayout>{renderPage()}</BaseLayout>;
 };
 
 const mapStateToProps = ({
    countries: {
-      present: { data, country },
+      present: { data, country, done },
    },
 }: any) => {
    return {
       countries: data,
       currentCountry: country,
+      done,
    };
 };
 

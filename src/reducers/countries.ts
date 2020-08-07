@@ -47,6 +47,7 @@ const countriesReducer = (
             ...state,
             country: {},
             error: 'Country not found.',
+            done: true,
          };
 
       // SEARCH COUNTRY
