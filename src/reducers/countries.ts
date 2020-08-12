@@ -1,10 +1,10 @@
 import undoable from 'redux-undo';
 import { countriesTypes } from '../actions/types';
-import _ from 'lodash';
 
 const INITIAL_STATE = {
    data: {},
    country: '',
+   alphabetic: '',
    error: '',
    done: false,
    searchValue: '',
@@ -19,13 +19,13 @@ const countriesReducer = (
       case countriesTypes.FETCH_COUNTRIES:
          return {
             ...state,
-            data: { ..._.mapKeys(action.payload, 'name') },
+            data: action.payload,
             done: true,
          };
       case countriesTypes.FETCH_COUNTRIES_ERROR:
          return {
             ...state,
-            data: [],
+            data: {},
             error: 'Failed to fetch countries',
             done: true,
          };
@@ -35,18 +35,44 @@ const countriesReducer = (
          return {
             ...state,
             done: false,
+            alphabetic: '',
+            country: '',
          };
       case countriesTypes.SET_CURRENT_COUNTRY_SUCCESS:
          return {
             ...state,
             country: action.payload,
             done: true,
+            alphabetic: action.payload[0],
          };
       case countriesTypes.SET_CURRENT_COUNTRY_FAILED:
          return {
             ...state,
             country: {},
             error: 'Country not found.',
+            done: true,
+            alphabetic: '',
+         };
+
+      // SET CURRENT ALPHABETIC
+      case countriesTypes.SET_CURRENT_ALPHABETIC_CHANGE:
+         return {
+            ...state,
+            done: false,
+         };
+      case countriesTypes.SET_CURRENT_ALPHABETIC_SUCCESS:
+         return {
+            ...state,
+            alphabetic: action.payload,
+            country: '',
+            done: true,
+         };
+      case countriesTypes.SET_CURRENT_ALPHABETIC_FAILED:
+         return {
+            ...state,
+            alphabetic: '',
+            country: '',
+            error: 'Alphabetic not found.',
             done: true,
          };
 

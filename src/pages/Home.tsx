@@ -17,14 +17,16 @@ interface Country {
 
 type HomeProps = {
    currentCountry: string;
-   countries: { [name: string]: Country };
+   countries: { [title: string]: { [name: string]: Country } };
    fetchCountries: () => void;
    done: boolean;
+   currentAlphabetic: string;
 };
 
 const Home: FunctionComponent<HomeProps> = ({
    countries,
    currentCountry = '',
+   currentAlphabetic = '',
    fetchCountries,
    done = true,
 }: HomeProps) => {
@@ -34,12 +36,26 @@ const Home: FunctionComponent<HomeProps> = ({
 
    const renderPage = () => {
       if (!done) return <div>Loading....</div>;
+
+      const renderCountryDetails = () => {
+         if (!countries) return <div>Loading....</div>;
+
+         if (currentCountry && currentAlphabetic) {
+            return (
+               <CountryDetails
+                  country={countries[currentAlphabetic][currentCountry]}
+               />
+            );
+         } else if (!currentCountry) {
+            return <CountryDetails countries={countries[currentAlphabetic]} />;
+         }
+         return null;
+      };
+
       return (
          <React.Fragment>
             <Sidebar title="Country List" countries={countries} />
-            {currentCountry && (
-               <CountryDetails country={countries[currentCountry]} />
-            )}
+            {renderCountryDetails()}
          </React.Fragment>
       );
    };
@@ -48,12 +64,13 @@ const Home: FunctionComponent<HomeProps> = ({
 
 const mapStateToProps = ({
    countries: {
-      present: { data, country, done },
+      present: { data, country, done, alphabetic },
    },
 }: any) => {
    return {
       countries: data,
       currentCountry: country,
+      currentAlphabetic: alphabetic,
       done,
    };
 };

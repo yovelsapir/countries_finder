@@ -24,6 +24,21 @@ export const setCurrentCountryFailed = () => ({
    type: countriesTypes.SET_CURRENT_COUNTRY_FAILED,
 });
 
+// SET CURRENT ALPHABETIC CHANGE
+export const setCurrentAlphabeticChange = (alphabetic: any) => ({
+   type: countriesTypes.SET_CURRENT_ALPHABETIC_CHANGE,
+   payload: alphabetic,
+});
+
+export const setCurrentAlphabeticSuccess = (alphabetic: any) => ({
+   type: countriesTypes.SET_CURRENT_ALPHABETIC_SUCCESS,
+   payload: alphabetic,
+});
+
+export const setCurrentAlphabeticFailed = () => ({
+   type: countriesTypes.SET_CURRENT_ALPHABETIC_FAILED,
+});
+
 // SEARCH COUNTRIES
 export const searchCountryChangeAction = (searchValue: string) => ({
    type: countriesTypes.SEARCH_COUNTRY_CHANGE,

@@ -1,49 +1,57 @@
 import React from 'react';
 import './CountryDetails.scss';
 
-// type CountryDetailsProps = {
-//    name: string;
-//    capital: string;
-//    population: number;
-//    alpha2Code: string;
-//    flag: string;
-// }
-
-export default ({
-   country: {
-      name = '',
-      capital = '',
-      flag = '',
-      population = 0,
-      alpha2Code = '',
-   } = {},
-}: any) => {
-   const renderTable = () => {
-      if (!name) return <h3>No country selected</h3>;
+const CountryDetails = ({ country = {}, countries = [] }: any) => {
+   // tslint:disable-next-line: no-shadowed-variable
+   const TableComponent = (country: any) => {
       return (
          <table>
             <tbody>
                <tr>
                   <td>Capital</td>
-                  <td>{capital}</td>
+                  <td>{country.capital}</td>
                </tr>
                <tr>
                   <td>Population</td>
-                  <td>{population}</td>
+                  <td>{country.population}</td>
                </tr>
                <tr>
                   <td>alpha2Code</td>
-                  <td>{alpha2Code}</td>
+                  <td>{country.alpha2Code}</td>
                </tr>
                <tr>
                   <td>Flag</td>
                   <td>
-                     <img src={flag} alt={name}></img>
+                     <img src={country.flag} alt={country.name}></img>
                   </td>
                </tr>
             </tbody>
          </table>
       );
+   };
+
+   const TableListComponent = () => {
+      return Object.entries(countries).map((item: any) => {
+         const [countryName, countryData] = item;
+         return (
+            <div key={countryName} style={{ padding: '1rem', flex: '0 0 1' }}>
+               {TableComponent(countryData)}
+            </div>
+         );
+      });
+   };
+
+   const renderTableDetails = () => {
+      // console.log(currentAlphabetic);
+      if (!country.name) {
+         return (
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+               {TableListComponent()}
+            </div>
+         );
+      } else {
+         return TableComponent(country);
+      }
    };
 
    const renderDetails = () => (
@@ -54,7 +62,7 @@ export default ({
             </div>
 
             <div className="country-details__container--body">
-               {renderTable()}
+               {renderTableDetails()}
             </div>
          </div>
       </div>
@@ -62,3 +70,5 @@ export default ({
 
    return <React.Fragment>{renderDetails()}</React.Fragment>;
 };
+
+export default CountryDetails;

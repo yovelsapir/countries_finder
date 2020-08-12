@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ChangeEvent, FormEvent } from 'react';
 import './Sidebar.scss';
-import List from './List';
+import ListComponent from './ListComponent';
 import { connect } from 'react-redux';
 import { searchCountryChangeAction } from '../actions';
 import { ActionCreators as UndoActionCreators } from 'redux-undo';
@@ -16,9 +16,7 @@ type SidebarProps = {
    canUndo: boolean;
    searchValue: string;
    title?: string;
-   countries: {
-      [name: string]: Country;
-   };
+   countries: { [title: string]: { [name: string]: Country } };
 };
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
@@ -67,7 +65,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
          {searchBox()}
          {/* <hr className="sidebar__hr" /> */}
          <ul className="sidebar__list">
-            <List countries={countries} search={searchValue} />
+            <ListComponent countries={countries} />
          </ul>
       </div>
    );
