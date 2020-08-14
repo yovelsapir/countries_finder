@@ -1,7 +1,14 @@
-import { call, put, all, takeEvery, take } from 'redux-saga/effects';
+import {
+   call,
+   put,
+   all,
+   takeEvery,
+   take,
+   takeLatest,
+} from 'redux-saga/effects';
 import { countriesTypes } from '../actions/types';
-import Api from '../Api/Api';
 import { filteredListByAlphabetic } from '../utils';
+import { countriesEvent } from './events';
 
 // WATCH FOR ALPHABETIC CLICKED
 function* handleChangeCurrentAlphabetic(action: any) {
@@ -52,6 +59,7 @@ function* watchSetCountryClicked() {
 // SEARCH BOX CHANGE
 function* handleSearchInputChange(action: any) {
    try {
+      //yield delay(200); // I'm not really need to do debounce here because I'm showing the data from global countries list.
       yield put({
          type: countriesTypes.SEARCH_COUNTRY_SUCCESS,
          payload: action.payload,
@@ -62,38 +70,58 @@ function* handleSearchInputChange(action: any) {
 }
 
 function* watchSearchInput() {
-   try {
-      yield takeEvery(
-         countriesTypes.SEARCH_COUNTRY_CHANGE,
-         handleSearchInputChange
-      );
-   } catch (error) {
-      yield put({ type: countriesTypes.SEARCH_COUNTRY_FAILED });
-   }
+   yield takeLatest(
+      countriesTypes.SEARCH_COUNTRY_CHANGE,
+      handleSearchInputChange
+   );
 }
 
 // FETCH COUNTRIES
-function* fetchCountries() {
+// function* fetchCountries() {
+//    try {
+//       yield take(countriesTypes.FETCH_COUNTRIES);
+//       const countries = yield call(Api.fetchCountries);
+//       const alphabeticCountries = filteredListByAlphabetic(countries, 'name');
+//       yield put({
+//          type: countriesTypes.FETCH_COUNTRIES,
+//          payload: alphabeticCountries,
+//       });
+//    } catch (error) {
+//       yield put({ type: countriesTypes.FETCH_COUNTRIES_ERROR, payload: error });
+//    }
+// }
+
+// fetchCountriesWithEvent
+function* watchfetchCountries() {
+   const chan = yield call(countriesEvent);
    try {
-      yield take(countriesTypes.FETCH_COUNTRIES);
-      const countries = yield call(Api.fetchCountries);
-      const alphabeticCountries = filteredListByAlphabetic(countries, 'name');
+      while (true) {
+         const countries = yield take(chan);
+
+         const alphabeticCountries = filteredListByAlphabetic(
+            countries,
+            'name'
+         );
+         yield put({
+            type: countriesTypes.FETCH_COUNTRIES,
+            payload: alphabeticCountries,
+         });
+      }
+   } finally {
+      console.log('connection closed');
+      chan.close();
       yield put({
-         type: countriesTypes.FETCH_COUNTRIES,
-         payload: alphabeticCountries,
+         type: countriesTypes.FETCH_COUNTRIES_ERROR,
+         payload: 'Connection closed.',
       });
-   } catch (error) {
-      yield put({ type: countriesTypes.FETCH_COUNTRIES_ERROR, payload: error });
    }
 }
 
-// notice how we now only export the rootSaga
-// single entry point to start all Sagas at once
 export default function* rootSaga() {
    yield all([
       watchSearchInput(),
       watchSetCountryClicked(),
       watchSetAlphabeticClicked(),
-      fetchCountries(),
+      watchfetchCountries(),
    ]);
 }

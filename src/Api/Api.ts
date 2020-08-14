@@ -7,6 +7,18 @@ const fetchCountries = async () => {
    }
 };
 
+const searchCountry = async (name: string) => {
+   try {
+      const response = await fetch(
+         `https://restcountries.eu/rest/v2/name/${name}`
+      );
+      return await response.json();
+   } catch (err) {
+      return err;
+   }
+};
+
 export default {
    fetchCountries,
+   searchCountry,
 };

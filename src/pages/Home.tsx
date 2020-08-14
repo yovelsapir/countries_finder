@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import BaseLayout from '../components/BaseLayout';
 import { connect } from 'react-redux';
-// import { fetchCountries as fetchCountriesAction } from './../actions/index';
 import Sidebar from '../components/Sidebar';
 import CountryDetails from '../components/CountryDetails';
 import { fetchCountriesAction } from '../actions';
@@ -30,13 +29,7 @@ const Home: FunctionComponent<HomeProps> = ({
    fetchCountries,
    done = true,
 }: HomeProps) => {
-   useEffect(() => {
-      fetchCountries();
-   }, []);
-
    const renderPage = () => {
-      if (!done) return <div>Loading....</div>;
-
       const renderCountryDetails = () => {
          if (!countries) return <div>Loading....</div>;
 

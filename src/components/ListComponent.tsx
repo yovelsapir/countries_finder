@@ -76,10 +76,11 @@ const ListComponent = ({
 
 const mapStateToProps = ({
    countries: {
-      present: { searchValue },
+      present: { searchValue, country },
    },
 }: any) => ({
    searchValue: searchValue.toUpperCase(),
+   country,
 });
 
 export default connect(mapStateToProps, {
