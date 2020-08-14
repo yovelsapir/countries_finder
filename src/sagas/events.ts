@@ -15,7 +15,7 @@ function countriesEvent() {
          } catch (error) {
             emitter(END);
          }
-      }, 2000);
+      }, 5000);
       return () => {
          clearInterval(iv);
       };
